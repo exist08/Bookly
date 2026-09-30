@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Newsreader-Italic.ttf",
+      "sha1": "db362e0d23a0b412d8a440638ce66b2d94e3d2e9"
+    },
+    {
+      "path": "src/assets/fonts/Newsreader-Medium.ttf",
+      "sha1": "4220ce4db016d69a91beccdd7debe2e14236aa15"
+    },
+    {
+      "path": "src/assets/fonts/Newsreader-Regular.ttf",
+      "sha1": "f1e9300cc9d870f7da746b98a5e292a423d1b2e4"
+    },
+    {
+      "path": "src/assets/fonts/PlusJakartaSans-Bold.ttf",
+      "sha1": "1cd8e162cc739ea7a55df8cea57c6187356e74b4"
+    },
+    {
+      "path": "src/assets/fonts/PlusJakartaSans-Medium.ttf",
+      "sha1": "afecea406e2e33ceea79e69104a4aed591fca95d"
+    },
+    {
+      "path": "src/assets/fonts/PlusJakartaSans-Regular.ttf",
+      "sha1": "f782a8361fa6affbc51c149421437e499e03c28b"
+    },
+    {
+      "path": "src/assets/fonts/PlusJakartaSans-SemiBold.ttf",
+      "sha1": "62d30211448babde7919e32e94852651cdf09ce0"
+    }
+  ]
+}

@@ -1,3 +1,29 @@
+# Bookly
+
+A social reading app: share the books you finish, discover books through other readers, vote reviews up or down.
+
+## Run it
+
+```sh
+npm install
+cd ios && bundle exec pod install && cd ..   # required: new native deps + the shared-transition feature flag
+npm run ios        # or: npm run android
+```
+
+`package.json` turns on Reanimated's `ENABLE_SHARED_ELEMENT_TRANSITIONS` static flag. It is read at build time, so rebuild the native app (pod install / gradle) after changing it.
+
+**Demo login:** `aarav@example.com` / `bookly123` (prefilled in dev). "Continue with Google" signs in a mock Google reader who goes through profile setup.
+
+## How it's put together
+
+- `src/data/api.ts` — mock API. Each function mirrors a `/v1` endpoint from the architecture sheet and persists to MMKV (`src/data/mockDb.ts`). Swap this file for real `fetch` calls; nothing else changes.
+- `src/hooks/queries.ts` — TanStack Query hooks, including optimistic, idempotent voting.
+- `src/theme` + `src/constants/Colors.ts` — light and dark palettes; Appearance (System / Light / Dark) lives in Edit profile.
+- `src/components/BookCover.tsx` — covers carry a `sharedTransitionTag`; tapping one in the feed, a shelf or "More from" flies it into the book detail screen. Tab screens are wrapped in `SharedTransitionBoundary` (`TabScene`) so only the visible tab can be a transition source.
+- Fonts: Newsreader + Plus Jakarta Sans static instances in `src/assets/fonts`, linked with `npx react-native-asset`.
+
+---
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
