@@ -17,6 +17,7 @@ import type {
 import { commit, getDb } from './mockDb';
 import { AVATAR_COLORS, COVER_PALETTES } from './seed';
 import { session } from '../store/session';
+import { googleRevokeAccess, googleSignIn, googleSignOut } from '../auth/google';
 
 export class ApiError extends Error {
   constructor(message: string, public code: string, public field?: string) {
@@ -103,37 +104,41 @@ export async function signUp(name: string, email: string, password: string): Pro
 }
 
 /**
- * Real app: get an ID token from @react-native-google-signin/google-signin and
- * POST it to /v1/auth/google, where the API verifies it against Google's JWKS.
- * Mock: signs in (or creates) a Google reader.
- * Auth calls return the user; useAuth() stores the session.
+ * Opens the real Google account picker, then signs in (or creates) the matching
+ * Bookly reader. Returns null if the reader cancels the picker.
+ *
+ * Backend hookup: POST { idToken: profile.idToken } to /v1/auth/google — the API
+ * verifies it (audience = web client ID) and returns the user + tokens. Until the
+ * app talks to the API, the local mock DB stands in for that call.
  */
-export async function signInWithGoogle(): Promise<User> {
-  await wait(500, 900);
+export async function signInWithGoogle(): Promise<User | null> {
+  const profile = await googleSignIn();
+  if (!profile) return null;
+
   const db = getDb();
-  const email = 'reader@gmail.com';
-  let user = db.users.find(u => u.email === email);
+  const email = profile.email.trim().toLowerCase();
+  let user = db.users.find(u => u.email.toLowerCase() === email);
   if (!user) {
     user = {
       id: uid('u'),
       email,
       username: '',
-      displayName: 'Google Reader',
+      displayName: profile.name ?? [profile.givenName, profile.familyName].filter(Boolean).join(' '),
       bio: '',
-      avatarUri: null,
-      avatarColor: '#3D5A80',
+      avatarUri: profile.photo,
+      avatarColor: AVATAR_COLORS[db.users.length % AVATAR_COLORS.length],
       provider: 'google',
       profileComplete: false,
       createdAt: new Date().toISOString(),
     };
     db.users.push(user);
-    commit();
   }
-  return user;
+  commit();
+  return { ...user };
 }
 
 export async function signOut() {
-  await wait(100, 200);
+  await Promise.all([wait(100, 200), googleSignOut()]);
 }
 
 export async function requestPasswordReset(email: string) {
@@ -233,6 +238,7 @@ export async function deleteMe(): Promise<void> {
   db.users = db.users.filter(u => u.id !== user.id);
   delete db.passwords[user.email.toLowerCase()];
   commit();
+  if (user.provider === 'google') await googleRevokeAccess();
 }
 
 // ---------- feed & posts ----------

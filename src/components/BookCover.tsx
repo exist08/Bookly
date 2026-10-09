@@ -4,11 +4,13 @@ import Animated, { SharedTransition } from 'react-native-reanimated';
 import { Fonts } from '../theme/fonts';
 import type { CoverPalette } from '../types/models';
 
+const AnimatedImage = Animated.createAnimatedComponent(Image);
+
 /**
  * Shared-element transition used for every cover → book-detail hop.
  * A spring reads more "physical" for a book being lifted off the shelf.
  */
-export const coverTransition = SharedTransition.duration(520).springify();
+// export const coverTransition = SharedTransition.duration(520).springify();
 
 interface Props {
   title: string;
@@ -40,13 +42,13 @@ export function BookCover({ title, author, uri, palette, width, tag, elevation =
   return (
     <Animated.View
       sharedTransitionTag={tag}
-      sharedTransitionStyle={tag ? coverTransition : undefined}
+      // sharedTransitionStyle={tag ? coverTransition : undefined}
       style={[
         styles.cover,
         { width, height, backgroundColor: palette.bg, boxShadow: shadows[elevation] },
       ]}>
       {uri ? (
-        <Image source={{ uri }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityIgnoresInvertColors />
+        <AnimatedImage sharedTransitionTag={tag} source={{ uri }} style={StyleSheet.absoluteFill} resizeMode="cover" accessibilityIgnoresInvertColors />
       ) : (
         <>
           <View style={[styles.frame, { top: inset, left: inset, right: inset, bottom: inset, borderColor: palette.fg }]} />

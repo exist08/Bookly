@@ -1,4 +1,4 @@
-package com.bookly
+package com.anurag.bookly
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -1,4 +1,4 @@
-package com.bookly
+package com.anurag.bookly
 
 import android.app.Application
 import com.facebook.react.PackageList

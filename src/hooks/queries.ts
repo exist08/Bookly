@@ -181,7 +181,8 @@ export function useAuth() {
   return {
     signIn: useMutation({ mutationFn: (v: { email: string; password: string }) => api.signIn(v.email, v.password), onSuccess: finish }),
     signUp: useMutation({ mutationFn: (v: { name: string; email: string; password: string }) => api.signUp(v.name, v.email, v.password), onSuccess: finish }),
-    google: useMutation({ mutationFn: api.signInWithGoogle, onSuccess: finish }),
+    // Resolves null when the reader closes the Google picker — nothing to do then.
+    google: useMutation({ mutationFn: api.signInWithGoogle, onSuccess: user => user && finish(user) }),
     signOut: useMutation({
       mutationFn: api.signOut,
       onSuccess: () => {

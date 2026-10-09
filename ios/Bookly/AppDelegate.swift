@@ -3,10 +3,11 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 
+/// Process-level setup only. Since the iOS 27 SDK, UIKit requires the scene
+/// life cycle: the window (and the React root view) is created in
+/// SceneDelegate, and URL / foreground events arrive there too.
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  var window: UIWindow?
-
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
@@ -20,16 +21,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     reactNativeDelegate = delegate
     reactNativeFactory = factory
-
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "Bookly",
-      in: window,
-      launchOptions: launchOptions
-    )
-
     return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    let config = UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    config.delegateClass = SceneDelegate.self
+    return config
   }
 }
 

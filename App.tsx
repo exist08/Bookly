@@ -9,6 +9,9 @@ import AppNavigator from './src/AppNavigator';
 import { queryClient } from './src/services/queryClient';
 import { ThemeProvider, useThemeColors } from './src/theme/ThemeProvider';
 import { Fonts } from './src/theme/fonts';
+import { configureGoogleSignIn } from './src/auth/google';
+
+configureGoogleSignIn();
 
 function ThemedToaster() {
   const { isDarkMode, theme } = useThemeColors();
